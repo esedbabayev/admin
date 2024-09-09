@@ -6,6 +6,7 @@ import "./index.css";
 // Components
 import Users from "./components/Users.jsx";
 import Products from "./components/Products.jsx";
+import AddProduct from "./components/AddProduct.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -15,16 +16,22 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/home",
+        path: "home",
         element: <div>home</div>,
       },
       {
-        path: "/users",
+        path: "users",
         element: <Users />,
       },
       {
-        path: "/products",
+        path: "products",
         element: <Products />,
+        children: [
+          {
+            path: "add-product",
+            element: <AddProduct />,
+          },
+        ],
       },
       {
         path: "/inbox",
