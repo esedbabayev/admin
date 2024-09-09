@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 
 // Components
 import NavBar from "../components/NavBar";
-import Products from "./Products";
 import Users from "./Users";
 import AddProduct from "./AddProduct";
+
+import { useLocation } from "react-router-dom";
+
 
 const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
   const [users, setUsers] = useState([]);
@@ -33,25 +35,20 @@ const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
     fetchData();
   }, []);
 
-  const renderMenu = () => {
-    switch (selectedMenu) {
-      case "users":
-        return <Users users={users} setUsers={setUsers} />;
-      case "products":
-        return <Products products={products} setProducts={setProducts} />;
-      case "Add Product":
-        return <AddProduct />;
-      default:
-        return <p>Welcome to the Admin Dashboard</p>;
-    }
-  };
+  const location = useLocation();
+
   return (
     <div className={`w-full ${sideBarToggle ? "" : "ml-64"}`}>
       <NavBar
         sideBarToggle={sideBarToggle}
         setSideBarToggle={setSideBarToggle}
       />
-      <div className="p-4">{renderMenu()}</div>
+        {location.pathname === "/" && (
+        <div className="p-4">Welcome To Admin Dashboard</div>
+      )}
+
+    
+      
     </div>
   );
 };
