@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+// Services
+import { getProductData } from "../services/getData";
+
+// Icons
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 
-const Products = ({ products, setProducts }) => {
+const Products = () => {
+  const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -12,18 +18,30 @@ const Products = ({ products, setProducts }) => {
     color: "",
     rating: "",
     quantity: "",
-    discount: ""
+    discount: "",
   });
+
+  const fetchData = async () => {
+    const products = await getProductData();
+    setProducts(products);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleEdit = async (productId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/products/${productId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
       if (response.ok) {
         const updatedProduct = await response.json();
@@ -44,9 +62,12 @@ const Products = ({ products, setProducts }) => {
 
   const handleDelete = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/products/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         console.log("Product deleted successfully");
