@@ -5,6 +5,7 @@ import { getProductData } from "../services/getData";
 
 // Icons
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -115,6 +116,9 @@ const Products = () => {
 
   return (
     <div className="overflow-x-auto">
+      <div>
+        <Link to={"add-product"}></Link>
+      </div>
       <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
@@ -149,7 +153,7 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {products?.map((product, index) => (
             <tr key={product._id} className="odd:bg-white even:bg-gray-100">
               <td className="py-2 px-4 border border-gray-300 text-center">
                 {index + 1}
