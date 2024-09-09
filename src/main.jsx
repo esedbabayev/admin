@@ -6,6 +6,8 @@ import './index.css'
 // Components
 import AddUser from './components/AddUser.jsx'
 import Users from './components/Users.jsx'
+import Products from './components/Products.jsx'
+
 
 import {
   createBrowserRouter,
@@ -16,16 +18,22 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-  },
-  {
-    path: "/users",
-    element: <Users/>,
-  },
-  {
-    path: "/addUser",
-    element: <AddUser/>,
-  },
+    children: [
+      {
+        path: "/users",
+        element: <Users />,
+      },
+      {
+        path: "/products",
+        element: <Products />,
+      },
+      {
+        path: "/addUser",
+        element: <AddUser />,
+      },
 
+    ],
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(

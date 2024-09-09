@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 
 // Components
 import NavBar from "../components/NavBar";
+import Users from "./Users";
+
+import { useLocation } from "react-router-dom";
 
 
 const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
@@ -31,8 +34,7 @@ const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
     fetchData();
   }, []);
 
-
-
+  const location = useLocation();
 
   return (
     <div className={`w-full ${sideBarToggle ? "" : "ml-64"}`}>
@@ -40,7 +42,12 @@ const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
         sideBarToggle={sideBarToggle}
         setSideBarToggle={setSideBarToggle}
       />
-      <div className="p-4"></div>
+        {location.pathname === "/" && (
+        <div className="p-4">Welcome To Admin Dashboard</div>
+      )}
+
+    
+      
     </div>
   );
 };

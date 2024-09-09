@@ -83,9 +83,10 @@ const Users = ({ users, setUsers }) => {
 
   return (
     <div className="overflow-x-auto">
-      <Link to="/addUser">
+
+      {/* <Link to="/addUser">
       <button>Add User</button>
-      </Link>
+      </Link> */}
       
       <table className="w-full bg-white border border-gray-200">
         <thead>

@@ -128,7 +128,7 @@ const Products = ({ products, setProducts }) => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {products?.map((product, index) => (
             <tr key={product._id} className="odd:bg-white even:bg-gray-100">
               <td className="py-2 px-4 border border-gray-300 text-center">
                 {index + 1}
