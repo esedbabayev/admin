@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 
+import { Link } from "react-router-dom";
+
 const Users = ({ users, setUsers }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -81,6 +83,10 @@ const Users = ({ users, setUsers }) => {
 
   return (
     <div className="overflow-x-auto">
+      <Link to="/addUser">
+      <button>Add User</button>
+      </Link>
+      
       <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
@@ -103,7 +109,7 @@ const Users = ({ users, setUsers }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
+          {users?.map((user, index) => (
             <tr key={user._id} className="odd:bg-white even:bg-gray-100">
               <td className="py-2 px-4 border border-gray-300 text-center">
                 {index + 1}
