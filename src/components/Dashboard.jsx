@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Products from "./Products";
 import Users from "./Users";
+import AddProduct from "./AddProduct";
 
 const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
   const [users, setUsers] = useState([]);
@@ -38,6 +39,8 @@ const Dashboard = ({ sideBarToggle, setSideBarToggle, selectedMenu }) => {
         return <Users users={users} setUsers={setUsers} />;
       case "products":
         return <Products products={products} setProducts={setProducts} />;
+      case "Add Product":
+        return <AddProduct />;
       default:
         return <p>Welcome to the Admin Dashboard</p>;
     }

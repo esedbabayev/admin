@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 const Products = ({ products, setProducts }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,6 +95,9 @@ const Products = ({ products, setProducts }) => {
 
   return (
     <div className="overflow-x-auto">
+      <div>
+        <Link to={"add-product"}></Link>
+      </div>
       <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
