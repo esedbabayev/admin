@@ -149,7 +149,9 @@ const AddProduct = () => {
               <div
                 key={idx}
                 className={`w-6 h-6 rounded-full cursor-pointer border-2 ${
-                  product.colors.includes(color) ? "border-black" : "border-transparent"
+                  product.colors.includes(color)
+                    ? "border-black"
+                    : "border-transparent"
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => handleColorClick(color)}
