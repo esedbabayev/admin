@@ -1,0 +1,16 @@
+export const postProduct = async (newProduct) => {
+  try {
+    const response = await fetch("http://localhost:5000/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    });
+
+    const result = await response.json();
+    console.log(result, "Product added successfully");
+  } catch (error) {
+    console.error("Error adding product:", error);
+  }
+};
