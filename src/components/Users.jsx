@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+// Services
+import { getUserData } from "../services/getData";
+
+// Icons
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 
-import { Link } from "react-router-dom";
-
-const Users = ({ users, setUsers }) => {
+const Users = () => {
+  const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -14,7 +18,15 @@ const Users = ({ users, setUsers }) => {
     email: "",
   });
 
-  // Open modal and set current user data
+  const fetchData = async () => {
+    const users = await getUserData();
+    setUsers(users);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const openModal = (user) => {
     setCurrentUser(user);
     setFormData({
@@ -27,19 +39,16 @@ const Users = ({ users, setUsers }) => {
     setIsModalOpen(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setCurrentUser(null);
   };
 
-  // Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -63,10 +72,11 @@ const Users = ({ users, setUsers }) => {
       closeModal();
     } catch (error) {
       console.error("Error updating user:", error);
+    } finally {
+      fetchData();
     }
   };
 
-  // Function to handle delete
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
