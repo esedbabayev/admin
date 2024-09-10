@@ -95,7 +95,7 @@ const Users = () => {
   return (
     <div className="overflow-x-auto ">
 
-      <Link to="/addUser">
+      <Link to="/add-user">
    
       <button className="px-3 py-2 rounded-lg text-white bg-gray-800 mb-2 ">
         Add User
@@ -241,6 +241,7 @@ const Users = () => {
           </div>
         </div>
       )}
+  
     </div>
   );
 };
