@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getProductData } from "../services/getData";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
 
-const Products = ({ products, setProducts }) => {
+const Products = () => {
+  const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -12,18 +15,32 @@ const Products = ({ products, setProducts }) => {
     color: "",
     rating: "",
     quantity: "",
-    discount: ""
+    discount: "",
   });
+
+  const fetchData = async () => {
+    const products = await getProductData();
+    setProducts(products);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const location = useLocation();
 
   const handleEdit = async (productId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/products/${productId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
 
       if (response.ok) {
         const updatedProduct = await response.json();
@@ -44,9 +61,12 @@ const Products = ({ products, setProducts }) => {
 
   const handleDelete = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/products/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         console.log("Product deleted successfully");
@@ -93,98 +113,119 @@ const Products = ({ products, setProducts }) => {
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full bg-white border border-gray-200">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border border-gray-300 text-center">#</th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Title
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Description
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Cover Image
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Price
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Size
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Color
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Rating
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Quantity
-            </th>
-            <th className="py-2 px-4 border border-gray-300 text-center">
-              Discount
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => (
-            <tr key={product._id} className="odd:bg-white even:bg-gray-100">
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {index + 1}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.title}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.description}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                <img
-                  src={product.coverImage}
-                  alt={product.title}
-                  className="w-16 h-16 object-cover"
-                />
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.price}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.size.join(", ")}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.color.join(", ")}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.rating}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.quantity}
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                {product.discount}%
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                <button
-                  onClick={() => openModal(product)}
-                  className="hover:text-blue-500"
-                >
-                  <RiEditLine />
-                </button>
-              </td>
-              <td className="py-2 px-4 border border-gray-300 text-center">
-                <button
-                  onClick={() => handleDelete(product._id)}
-                  className="hover:text-red-500"
-                >
-                  <RiDeleteBin6Line />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <>
+      {location.pathname !== "/products/add-product" ? (
+        <Link to="add-product">
+          <button className="px-3 py-2 rounded-lg text-white bg-black mb-2">
+            Add Product
+          </button>
+        </Link>
+      ) : (
+        <Link to="/products">
+          <button className="px-3 py-2 rounded-lg text-white bg-black mb-2">
+            Products
+          </button>
+        </Link>
+      )}
 
+      {location.pathname !== "/products/add-product" && (
+        <div className="overflow-x-auto mt-4">
+          <table className="w-full bg-white border border-gray-200">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  #
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Title
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Description
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Cover Image
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Price
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Size
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Color
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Rating
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Quantity
+                </th>
+                <th className="py-2 px-4 border border-gray-300 text-center">
+                  Discount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {products?.map((product, index) => (
+                <tr key={product._id} className="odd:bg-white even:bg-gray-100">
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.title}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.description}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    <img
+                      src={product.coverImage}
+                      alt={product.title}
+                      className="w-16 h-16 object-cover"
+                    />
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.price}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.size.join(", ")}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.color.join(", ")}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.rating}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.quantity}
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    {product.discount}%
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    <button
+                      onClick={() => openModal(product)}
+                      className="hover:text-blue-500"
+                    >
+                      <RiEditLine />
+                    </button>
+                  </td>
+                  <td className="py-2 px-4 border border-gray-300 text-center">
+                    <button
+                      onClick={() => handleDelete(product._id)}
+                      className="hover:text-red-500"
+                    >
+                      <RiDeleteBin6Line />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal for Editing */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-md w-96">
@@ -270,27 +311,23 @@ const Products = ({ products, setProducts }) => {
                   className="border w-full p-2"
                 />
               </label>
-
-              <div className="flex justify-end mt-4">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="bg-gray-500 text-white px-4 py-2 mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2"
-                >
-                  Save
-                </button>
-              </div>
+              <button type="submit" className="bg-blue-500 text-white p-2">
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="ml-2 bg-gray-300 text-black p-2"
+              >
+                Cancel
+              </button>
             </form>
           </div>
         </div>
       )}
-    </div>
+
+      <Outlet />
+    </>
   );
 };
 

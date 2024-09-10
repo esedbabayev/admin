@@ -1,34 +1,52 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
 
 // Components
-import AddUser from './components/AddUser.jsx'
-import Users from './components/Users.jsx'
+import Users from "./components/Users.jsx";
+import Products from "./components/Products.jsx";
+import AddProduct from "./components/AddProduct.jsx";
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    children: [
+      {
+        path: "home",
+        element: <div>home</div>,
+      },
+      {
+        path: "users",
+        element: <Users />,
+      },
+      {
+        path: "products",
+        element: <Products />,
+        children: [
+          {
+            path: "add-product",
+            element: <AddProduct />,
+          },
+        ],
+      },
+      {
+        path: "/inbox",
+        element: <div>inbox</div>,
+      },
+      {
+        path: "/settings",
+        element: <div>settings</div>,
+      },
+    ],
   },
-  {
-    path: "/users",
-    element: <Users/>,
-  },
-  {
-    path: "/addUser",
-    element: <AddUser/>,
-  },
-
 ]);
 
-createRoot(document.getElementById('root')).render(
-  
-  <RouterProvider router={router} />
-)
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <RouterProvider router={router} />{" "}
+  </StrictMode>
+);
