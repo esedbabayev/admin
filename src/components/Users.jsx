@@ -72,6 +72,8 @@ const Users = () => {
       closeModal();
     } catch (error) {
       console.error("Error updating user:", error);
+    } finally {
+      fetchData();
     }
   };
 
@@ -91,11 +93,10 @@ const Users = () => {
 
   return (
     <div className="overflow-x-auto">
-
       {/* <Link to="/addUser">
       <button>Add User</button>
       </Link> */}
-      
+
       <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
