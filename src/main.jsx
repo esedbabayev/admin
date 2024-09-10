@@ -10,6 +10,7 @@ import AddProduct from "./components/AddProduct.jsx";
 import AddUser from "./components/AddUser.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import UploadImage from "./components/UploadImage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,9 +28,7 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <Users />,
-        children: [
-       
-        ],
+        children: [],
       },
       {
         path: "add-user",
@@ -53,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <div>settings</div>,
+      },
+      {
+        path: "/image-upload",
+        element: <UploadImage />,
       },
     ],
   },
