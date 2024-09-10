@@ -5,6 +5,7 @@ import { getUserData } from "../services/getData";
 
 // Icons
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
