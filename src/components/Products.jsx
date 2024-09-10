@@ -56,6 +56,8 @@ const Products = () => {
       }
     } catch (error) {
       console.error("Error updating product:", error);
+    } finally {
+      fetchData();
     }
   };
 
