@@ -7,6 +7,7 @@ import "./index.css";
 import Users from "./components/Users.jsx";
 import Products from "./components/Products.jsx";
 import AddProduct from "./components/AddProduct.jsx";
+import AddUser from "./components/AddUser.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -26,6 +27,13 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <Users />,
+        children: [
+       
+        ],
+      },
+      {
+        path: "add-user",
+        element: <AddUser />,
       },
 
       {
