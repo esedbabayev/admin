@@ -16,6 +16,10 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
+        path: "/",
+        element: <h1>Welcome To Admin Dashboard</h1>,
+      },
+      {
         path: "home",
         element: <div>home</div>,
       },
@@ -23,6 +27,7 @@ const router = createBrowserRouter([
         path: "users",
         element: <Users />,
       },
+
       {
         path: "products",
         element: <Products />,

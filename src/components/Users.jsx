@@ -5,6 +5,7 @@ import { getUserData } from "../services/getData";
 
 // Icons
 import { RiDeleteBin6Line, RiEditLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -92,11 +93,16 @@ const Users = () => {
   };
 
   return (
-    <div className="overflow-x-auto">
-      {/* <Link to="/addUser">
-      <button>Add User</button>
-      </Link> */}
+    <div className="overflow-x-auto ">
 
+      <Link to="/addUser">
+   
+      <button className="px-3 py-2 rounded-lg text-white bg-gray-800 mb-2 ">
+        Add User
+        </button>
+     
+      </Link>
+      
       <table className="w-full bg-white border border-gray-200">
         <thead>
           <tr>
