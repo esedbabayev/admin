@@ -24,13 +24,16 @@ const AddProduct = () => {
 
     const newProduct = {
       title,
-      price,
-      category,
       description,
       coverImage: uploadedImageUrl,
-      newArrival,
-      topSelling,
+      price,
+      // size,
+      // color,
+      // rating,
       quantity,
+      // discount,
+      // newArrival,
+      // topSeller,
     };
 
     try {
