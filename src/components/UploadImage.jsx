@@ -59,14 +59,14 @@ const UploadImage = () => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <input type="file" onChange={handleChange} />
         {imageArray.map((url, index) => (
           <img key={index} src={url} alt={`uploaded ${index}`} />
         ))}
 
         <button onClick={handleClick}>Send</button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -8,8 +8,12 @@ export const postProduct = async (newProduct) => {
       body: JSON.stringify(newProduct),
     });
 
+    console.log(newProduct);
+
+    // if (!response.ok) return console.log("backend error");
+
     const result = await response.json();
-    console.log(result, "Product added successfully");
+    console.log(result);
   } catch (error) {
     console.error("Error adding product:", error);
   }

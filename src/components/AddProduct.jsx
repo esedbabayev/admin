@@ -1,285 +1,169 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { postProduct } from "../services/postProduct.js";
+import { uploadImageToCloud } from "../services/uploadImage.js";
 
 const AddProduct = () => {
-  const [product, setProduct] = useState({
-    title: "",
-    price: "",
-    category: "",
-    slug: "",
-    sku: "",
-    description: "",
-    stockStatus: "",
-    quantity: "",
-    images: [],
-    colors: [],
-    sizes: [],
-    newArrival: false,
-    topSeller: false,
-  });
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [imageArray, setImageArray] = useState([]);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [newArrival, setNewArrival] = useState(false);
+  const [topSelling, setTopSelling] = useState(false);
 
-  const [imageFiles, setImageFiles] = useState([]);
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    let uploadedImageUrl = "";
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProduct({
-      ...product,
-      [name]: value,
-    });
-  };
+    if (imageUrl) {
+      uploadedImageUrl = await uploadImageToCloud(imageUrl);
+    }
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setProduct({
-      ...product,
-      [name]: checked,
-    });
-  };
+    const newProduct = {
+      title,
+      price,
+      category,
+      description,
+      coverImage: uploadedImageUrl,
+      newArrival,
+      topSelling,
+      quantity,
+    };
 
-  const handleColorClick = (color) => {
-    setProduct((prevProduct) => ({
-      ...prevProduct,
-      colors: prevProduct.colors.includes(color)
-        ? prevProduct.colors.filter((c) => c !== color)
-        : [...prevProduct.colors, color],
-    }));
+    try {
+      const response = await postProduct(newProduct);
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
   };
 
   const handleImageChange = (e) => {
-    setImageFiles([...e.target.files]);
-  };
+    const file = e.target.files[0];
+    setImageUrl(file);
+    setImageArray([...imageArray, URL.createObjectURL(file)]);
 
-  const uploadImagesToCloudinary = async () => {
-    const uploadedImages = [];
-    for (let image of imageFiles) {
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", "your_cloudinary_preset"); // Replace with your Cloudinary preset
-
-      try {
-        const response = await axios.post(
-          "https://api.cloudinary.com/v1_1/your_cloudinary_name/image/upload", // Replace with your Cloudinary name
-          formData
-        );
-        uploadedImages.push(response.data.secure_url);
-      } catch (error) {
-        console.error("Error uploading to Cloudinary", error);
-        alert("Failed to upload images");
-        return [];
-      }
-    }
-    return uploadedImages;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      // Upload images to Cloudinary first
-      const uploadedImages = await uploadImagesToCloudinary();
-
-      if (uploadedImages.length === 0) return;
-
-      // Include uploaded image URLs in product data
-      const productData = {
-        ...product,
-        images: uploadedImages,
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
       };
-
-      // Send the product data to your backend
-      const response = await axios.post("http://localhost:5000/api/products", productData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 201) {
-        alert("Product added successfully!");
-        // Optionally, clear the form after successful submission
-        setProduct({
-          title: "",
-          price: "",
-          category: "",
-          slug: "",
-          sku: "",
-          description: "",
-          stockStatus: "",
-          quantity: "",
-          images: [],
-          colors: [],
-          sizes: [],
-          newArrival: false,
-          topSeller: false,
-        });
-        setImageFiles([]);
-      } else {
-        alert("Error adding product");
-      }
-    } catch (error) {
-      console.error("Error adding product:", error);
-      alert("Failed to add product. Please try again later.");
+      reader.readAsDataURL(file);
     }
   };
 
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl font-semibold mb-6">Add Product</h2>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg grid grid-cols-2 gap-8">
+      <form
+        onSubmit={handleAddProduct}
+        className="bg-white p-6 rounded-lg grid grid-cols-2 gap-8"
+      >
         <div>
-          {/* Title */}
           <label className="block mb-2 font-medium">Title</label>
           <input
             type="text"
             name="title"
-            value={product.title}
-            onChange={handleInputChange}
             className="w-full border p-2 rounded mb-4"
             required
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
           />
 
-          {/* Price */}
           <label className="block mb-2 font-medium">Price</label>
           <input
             type="number"
             name="price"
-            value={product.price}
-            onChange={handleInputChange}
             className="w-full border p-2 rounded mb-4"
             required
+            onChange={(e) => setPrice(e.target.value)}
+            value={price}
           />
 
-          {/* Category */}
           <label className="block mb-2 font-medium">Category</label>
           <input
             type="text"
             name="category"
-            value={product.category}
-            onChange={handleInputChange}
             className="w-full border p-2 rounded mb-4"
+            onChange={(e) => setCategory(e.target.value)}
+            value={category}
           />
 
-          {/* Slug */}
-          <label className="block mb-2 font-medium">Slug</label>
-          <input
-            type="text"
-            name="slug"
-            value={product.slug}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded mb-4"
-          />
-
-          {/* SKU */}
-          <label className="block mb-2 font-medium">SKU</label>
-          <input
-            type="text"
-            name="sku"
-            value={product.sku}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded mb-4"
-          />
-
-          {/* Description */}
           <label className="block mb-2 font-medium">Description</label>
           <textarea
             name="description"
-            value={product.description}
-            onChange={handleInputChange}
             className="w-full border p-2 rounded mb-4 h-28"
             required
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
           />
         </div>
-
         <div>
-          {/* Stock Status */}
-          <label className="block mb-2 font-medium">Stock Status</label>
-          <input
-            type="text"
-            name="stockStatus"
-            value={product.stockStatus}
-            onChange={handleInputChange}
-            className="w-full border p-2 rounded mb-4"
-          />
-
-          {/* Quantity */}
           <label className="block mb-2 font-medium">Quantity</label>
           <input
             type="number"
             name="quantity"
-            value={product.quantity}
-            onChange={handleInputChange}
             className="w-full border p-2 rounded mb-4"
             required
+            onChange={(e) => setQuantity(e.target.value)}
+            value={quantity}
           />
 
-          {/* Image Upload */}
           <label className="block mb-2 font-medium">Images</label>
           <div className="border p-2 rounded mb-4">
             <input
               type="file"
               name="images"
-              multiple
               onChange={handleImageChange}
+              multiple
               className="block"
             />
+            {imageUrl && (
+              <div className="w-20 h-20 mt-4">
+                <img src={imagePreview} alt="Preview" />
+              </div>
+            )}
           </div>
 
-          {/* Colors */}
           <label className="block mb-2 font-medium">Colors</label>
           <div className="flex space-x-2 mb-4">
             {["#6B7280", "#FBBF24", "#10B981", "#3B82F6"].map((color, idx) => (
               <div
                 key={idx}
-                className={`w-6 h-6 rounded-full cursor-pointer border-2 ${
-                  product.colors.includes(color)
-                    ? "border-black"
-                    : "border-transparent"
-                }`}
+                className={`w-6 h-6 rounded-full cursor-pointer border-2`}
                 style={{ backgroundColor: color }}
-                onClick={() => handleColorClick(color)}
               />
             ))}
           </div>
 
-          {/* Sizes */}
           <label className="block mb-2 font-medium">Sizes</label>
           <div className="flex space-x-2">
-            {["S", "M", "L", "XL", "XXL"].map((size, idx) => (
-              <button
-                key={idx}
-                className={`border px-4 py-2 rounded ${
-                  product.sizes.includes(size) ? "bg-gray-300" : ""
-                }`}
-                onClick={() =>
-                  setProduct((prevProduct) => ({
-                    ...prevProduct,
-                    sizes: prevProduct.sizes.includes(size)
-                      ? prevProduct.sizes.filter((s) => s !== size)
-                      : [...prevProduct.sizes, size],
-                  }))
-                }
-              >
+            {["XS", "S", "M", "L", "XL", "XXL"].map((size, idx) => (
+              <button key={idx} className={`border px-4 py-2 rounded`}>
                 {size}
               </button>
             ))}
           </div>
 
-          {/* New Arrival */}
           <label className="block mb-2 font-medium">New Arrival</label>
           <input
             type="checkbox"
             name="newArrival"
-            checked={product.newArrival}
-            onChange={handleCheckboxChange}
+            onChange={(e) => setNewArrival(e.target.checked)}
+            checked={newArrival}
             className="mr-2"
           />
 
-          {/* Top Seller */}
           <label className="block mb-2 font-medium">Top Seller</label>
           <input
             type="checkbox"
             name="topSeller"
-            checked={product.topSeller}
-            onChange={handleCheckboxChange}
+            onChange={(e) => setTopSelling(e.target.checked)}
+            checked={topSelling}
             className="mr-2"
           />
         </div>
