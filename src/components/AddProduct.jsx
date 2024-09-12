@@ -3,34 +3,39 @@ import { postProduct } from "../services/postProduct.js";
 import { uploadImageToCloud } from "../services/uploadImage.js";
 import { useForm } from "react-hook-form";
 
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+
+// Actions
+import { selectCategories } from "../../redux/slices/category.slice.js";
+
 const AddProduct = () => {
-  const [category, setCategory] = useState([]);
   const [coverImage, setCoverImage] = useState(null);
+  const categories = useSelector(
+    (state) => state.categories.categories.mensClothing
+  );
 
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-  const onSubmit = async(values) => {
 
-    const response = await postProduct(newProduct);
-    const data = await response.json();
+  const onSubmit = async (values) => {
     console.log(values);
-    console.log(data);
-  };
 
-  const handleAddProduct = async (e) => {
-    e.preventDefault();
     const newProduct = {
-      title,
-      description,
+      title: values.title,
+      description: values.description,
       coverImage,
-      price,
+      price: values.price,
+      quantity: values.quantity,
+      category: values.category,
+      newArrival: values.newArrival,
+      topSeller: values.topSeller,
       // size,
       // color,
       // rating,
-      quantity,
       // discount,
       // newArrival,
       // topSeller,
@@ -38,7 +43,7 @@ const AddProduct = () => {
 
     const response = await postProduct(newProduct);
     const data = await response.json();
-    console.log(data)
+    console.log(data.createdProduct);
   };
 
   const handleImage = async (e) => {
@@ -51,38 +56,52 @@ const AddProduct = () => {
       <form
         //
         onSubmit={handleSubmit(onSubmit)}
-        //
-        // onSubmit={handleAddProduct}
         className="bg-white p-6 rounded-lg grid grid-cols-2 gap-8"
       >
         <div>
           <label className="block mb-2 font-medium">Title</label>
           <input
-            {...register("title")}
+            {...register("title", {
+              required: "Title is required",
+            })}
             type="text"
             name="title"
             className="w-full border p-2 rounded mb-4"
-            required
           />
+          {errors.title && (
+            <span className="text-red-500">{errors.title.message}</span>
+          )}
 
           <label className="block mb-2 font-medium">Price</label>
           <input
-            {...register("price")}
+            {...register("price", {
+              required: "Enter the price",
+            })}
             type="number"
             name="price"
             className="w-full border p-2 rounded mb-4"
-            required
           />
+          {errors.price && (
+            <span className="text-red-500">{errors.price.message}</span>
+          )}
 
           <label className="block mb-2 font-medium">Category</label>
-          <input
-            {...register("category")}
-            type="text"
-            name="category"
+          <select
+            {...register("category", { required: "Category is required" })}
             className="w-full border p-2 rounded mb-4"
-            onChange={(e) => setCategory(e.target.value)}
-            value={category}
-          />
+          >
+            <option value="">Select a category</option>{" "}
+            {categories &&
+              categories.map((category) => {
+                console.log(categories);
+                
+                return <option value={category}>{category}</option>;
+
+              })}
+          </select>
+          {errors.category && (
+            <span className="text-red-500">{errors.category.message}</span>
+          )}
 
           <label className="block mb-2 font-medium">Description</label>
           <textarea
@@ -157,10 +176,11 @@ const AddProduct = () => {
 
         <div className="col-span-2">
           <button
+            disabled={isSubmitting}
             type="submit"
             className="bg-black text-white px-4 py-2 rounded"
           >
-            Save Product
+            {isSubmitting ? "Being submitted" : "Save Product"}
           </button>
         </div>
       </form>
