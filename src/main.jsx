@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 
+// Redux
+import { Provider } from "react-redux";
+import { store } from "../redux/store.js";
+
 // Components
 import Users from "./components/Users.jsx";
 import Products from "./components/Products.jsx";
@@ -62,7 +66,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <RouterProvider router={router} />{" "}
-  </StrictMode>
+  <Provider store={store}>
+    <StrictMode>
+      <RouterProvider router={router} />{" "}
+    </StrictMode>
+  </Provider>
 );
