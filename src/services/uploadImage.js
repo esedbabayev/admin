@@ -14,7 +14,10 @@ export const uploadImageToCloud = async (file) => {
     );
     const data = await response.json();
     const newImageURL = data.secure_url;
+
     console.log(newImageURL, "Image uploaded successfully");
+  
+  return newImageURL
   } catch (error) {
     console.error("Error uploading image:", error);
   }
