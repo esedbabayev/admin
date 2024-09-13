@@ -11,6 +11,7 @@ const Products = () => {
     title: "",
     description: "",
     price: "",
+    category: "",
     size: "",
     color: "",
     rating: "",
