@@ -13,7 +13,7 @@ export const postProduct = async (newProduct) => {
     if (!response.ok) return console.log("backend error");
 
     const result = await response.json();
-    console.log(result);
+    console.log(result.createdProduct);
   } catch (error) {
     console.error("Error adding product:", error);
   }

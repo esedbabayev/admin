@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { postProduct } from "../services/postProduct.js";
 import { uploadImageToCloud } from "../services/uploadImage.js";
@@ -7,13 +9,18 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
 // Actions
-import { selectCategories } from "../../redux/slices/category.slice.js";
+import { selectCategories } from "../redux/slices/category.slice.js";
 
 const AddProduct = () => {
   const [coverImage, setCoverImage] = useState(null);
-  const categories = useSelector(
-    (state) => state.categories.categories.mensClothing
-  );
+  const categories = useSelector((state) => state.categories.categories);
+
+  const dispatch = useDispatch();
+
+  const selectCategory = (category) => {
+    console.log(category);
+    dispatch(selectCategories(category));
+  };
 
   const {
     handleSubmit,
@@ -22,7 +29,7 @@ const AddProduct = () => {
   } = useForm();
 
   const onSubmit = async (values) => {
-    console.log(values);
+    console.log(values.category);  
 
     const newProduct = {
       title: values.title,
@@ -33,7 +40,7 @@ const AddProduct = () => {
       category: values.category,
       newArrival: values.newArrival,
       topSeller: values.topSeller,
-      // size,
+      // size: values.size,
       // color,
       // rating,
       // discount,
@@ -87,17 +94,21 @@ const AddProduct = () => {
 
           <label className="block mb-2 font-medium">Category</label>
           <select
+            onChange={(e) => {
+              const selectedCategory = e.target.value;
+              console.log(selectedCategory); // Logs the selected value
+              selectCategory(selectedCategory); // Dispatch the selected category
+            }}
             {...register("category", { required: "Category is required" })}
             className="w-full border p-2 rounded mb-4"
           >
-            <option value="">Select a category</option>{" "}
+            <option value="">Select a category</option>
             {categories &&
-              categories.map((category) => {
-                console.log(categories);
-                
-                return <option value={category}>{category}</option>;
-
-              })}
+              categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
           </select>
           {errors.category && (
             <span className="text-red-500">{errors.category.message}</span>
