@@ -9,6 +9,14 @@ import Products from "./components/Products.jsx";
 import AddProduct from "./components/AddProduct.jsx";
 import AddUser from "./components/AddUser.jsx";
 
+import AddCommon from "./components/CommonPage/AddCommon.jsx";
+import EditCommon from "./components/CommonPage/EditCommon.jsx";
+import CommonTable from "./components/CommonPage/CommonTable.jsx";
+
+import AddFaq from "./components/FAQ/AddFaq.jsx";
+import EditFaq from "./components/FAQ/EditFaq.jsx";
+import FaqTable from "./components/FAQ/FaqTable.jsx";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -47,12 +55,28 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/inbox",
-        element: <div>inbox</div>,
+        path: "/add-common",
+        element: <AddCommon/>,
       },
       {
-        path: "/settings",
-        element: <div>settings</div>,
+        path: "/edit-common/:_id",
+        element: <EditCommon/>,
+      },
+      {
+        path: "/common-table",
+        element: <CommonTable/>,
+      },
+      {
+        path: "/add-faq",
+        element: <AddFaq/>,
+      },
+      {
+        path: "/edit-faq",
+        element: <EditFaq/>,
+      },
+      {
+        path: "/faq",
+        element: <FaqTable/>,
       },
     ],
   },
