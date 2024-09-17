@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 
+// Redux
+import { Provider } from "react-redux";
+import { store } from "./redux/store.js";
+
 // Components
 import Users from "./components/Users.jsx";
 import Products from "./components/Products.jsx";
@@ -10,6 +14,7 @@ import AddProduct from "./components/AddProduct.jsx";
 import AddUser from "./components/AddUser.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import UploadImage from "./components/UploadImage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,9 +32,7 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <Users />,
-        children: [
-       
-        ],
+        children: [],
       },
       {
         path: "add-user",
@@ -54,12 +57,18 @@ const router = createBrowserRouter([
         path: "/settings",
         element: <div>settings</div>,
       },
+      {
+        path: "/image-upload",
+        element: <UploadImage />,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <RouterProvider router={router} />{" "}
-  </StrictMode>
+  <Provider store={store}>
+    <StrictMode>
+      <RouterProvider router={router} />{" "}
+    </StrictMode>
+  </Provider>
 );

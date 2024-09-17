@@ -11,6 +11,7 @@ const Products = () => {
     title: "",
     description: "",
     price: "",
+    category: "",
     size: "",
     color: "",
     rating: "",
@@ -56,6 +57,8 @@ const Products = () => {
       }
     } catch (error) {
       console.error("Error updating product:", error);
+    } finally {
+      fetchData();
     }
   };
 
