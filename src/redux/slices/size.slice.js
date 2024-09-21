@@ -3,7 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 export const sizeSlice = createSlice({
   name: "size",
   initialState: {
-    sizes: [],
+    sizes: [
+
+      "XS", "S", "M", "L", "XL", "XXL"
+    ],
     selectedSizes: [],
   },
   reducers: {
