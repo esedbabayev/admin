@@ -14,6 +14,7 @@ import { selectCategories } from "../redux/slices/category.slice.js";
 const AddProduct = () => {
   const [coverImage, setCoverImage] = useState(null);
   const categories = useSelector((state) => state.categories.categories);
+  const sizes = useSelector((state) => state.sizes.sizes);
 
   const dispatch = useDispatch();
 
@@ -161,7 +162,7 @@ const AddProduct = () => {
 
           <label className="block mb-2 font-medium">Sizes</label>
           <div className="flex space-x-2">
-            {["XS", "S", "M", "L", "XL", "XXL"].map((size, idx) => (
+            {sizes && sizes.map((size, idx) => (
               <button key={idx} className={`border px-4 py-2 rounded`}>
                 {size}
               </button>

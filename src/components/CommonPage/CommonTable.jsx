@@ -9,7 +9,6 @@ const CommonTable = () => {
 
     const fetchCommons = async () =>{
       try {
-        console.log("object")
         const response = await fetch('http://localhost:8000/common');
         if (!response.ok) throw new Error('Failed to fetch commons');
         const data = await response.json();
